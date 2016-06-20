@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// TODO need to keep objects in the elvator lockstep in relative position...
 public class TrackElevator : MonoBehaviour {
 	public GameObject[] MotionPath;
 	public float[] TargetVelocity;
@@ -19,12 +18,11 @@ public class TrackElevator : MonoBehaviour {
 	private Vector3 debugDirection;
     private float startTime;
     private float journeyLength;
-    private ArrayList parentTable;
+    private ArrayList elevatorChildren;
 
-
+    // Minimum distance before elevator will begin translating to next point
     private const float MIN_DIST = 1.0f;
 
-	// Use this for initialization
 	void Start () {
 		Debug.Assert (MotionPath.Length + 1 == TargetVelocity.Length);
 		currentMotionState = MOTION_STATE.AT_REST;
@@ -34,7 +32,7 @@ public class TrackElevator : MonoBehaviour {
 			originPath [i + 1] = MotionPath [i].transform.position;
 		}
 
-        parentTable = new ArrayList();
+        elevatorChildren = new ArrayList();
 	}
 	
 	// Update is called once per frame
@@ -74,7 +72,7 @@ public class TrackElevator : MonoBehaviour {
             Vector3 diff = gameObject.transform.position - oldPos;
 
             // We will manually translate everything in the elevator
-            foreach (GameObject gob in parentTable)
+            foreach (GameObject gob in elevatorChildren)
             {
                 gob.transform.position += diff;
             }
@@ -91,37 +89,37 @@ public class TrackElevator : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collision....." + other.name);
-        GameObject gobject = other.gameObject;
+        GameObject otherObject = other.gameObject;
 
         // This is a bit of a work around for the fact that the collider is a child of the character object.
-        if (gobject.layer == LayerMask.NameToLayer("Character"))
+        if (otherObject.layer == LayerMask.NameToLayer("Character"))
         {
             Debug.Log("Player intersection....");
-            gobject = GameObject.Find("Character");
+            otherObject = GameObject.Find("Character");
         }
 
-        if (!parentTable.Contains(gobject))
+        if (!elevatorChildren.Contains(otherObject))
         {
             Debug.Log("Adding colliding to translate map");
-            parentTable.Add(gobject);
+            elevatorChildren.Add(otherObject);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
         Debug.Log("On Collision Exit.....");
-        GameObject gobject = other.gameObject;
+        GameObject otherObject = other.gameObject;
 
         // This is a bit of a work around for the fact that the collider is a child of the character object.
-        if (gobject.layer == LayerMask.NameToLayer("Character"))
+        if (otherObject.layer == LayerMask.NameToLayer("Character"))
         {
             Debug.Log("Player intersection....");
-            gobject = GameObject.Find("Character");
+            otherObject = GameObject.Find("Character");
         }
-        if (parentTable.Contains(gobject))
+        if (elevatorChildren.Contains(otherObject))
         {
             Debug.Log("Removing colliding object from translate map");
-            parentTable.Remove(gobject);
+            elevatorChildren.Remove(otherObject);
         }
     }
 
