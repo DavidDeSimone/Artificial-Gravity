@@ -13,6 +13,7 @@ public class OrientationSelectableObjectCallback : SelectableObjectCallback {
 
     private const float SELECTION_DISTANCE = 2.0f;
     private const float SPEED = 1000.0f;
+    private const float MINIMUM_DISTANCE = 0.05f;
 
 	// Use this for initialization
 	void Start () {
@@ -53,7 +54,7 @@ public class OrientationSelectableObjectCallback : SelectableObjectCallback {
                 Debug.DrawRay(gameObject.transform.position, diff, Color.grey);
             }
             
-            if (Vector3.Distance(gameObject.transform.position, OrentationReference.transform.position + (OrentationReference.transform.forward.normalized * SELECTION_DISTANCE)) <= 0.5f)
+            if (Vector3.Distance(gameObject.transform.position, OrentationReference.transform.position + (OrentationReference.transform.forward.normalized * SELECTION_DISTANCE)) <= MINIMUM_DISTANCE)
             {
                 rigidBody.AddForce(-lastForce);
                 
