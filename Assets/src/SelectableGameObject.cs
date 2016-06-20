@@ -49,7 +49,7 @@ public class SelectableGameObject : MonoBehaviour {
         }
 
 
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetButtonUp(InputService.ACTION_BUTTON))
         {
             if (objectSelected)
             {

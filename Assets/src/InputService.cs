@@ -15,6 +15,7 @@ public class InputService : MonoBehaviour {
     public float MixedTrigger { get; private set; }
     
     public float MixedTriggerButtons { get; private set; }
+    public const string ACTION_BUTTON = "Action Key";
 
     void Start () {
         CalibrateJoystick();
